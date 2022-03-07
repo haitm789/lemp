@@ -1,0 +1,47 @@
+version: "3.3"
+services:
+  nginx:
+    container_name: lemp-nginx
+    image: tutum/nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./docker/nginx/sites/:/etc/nginx/sites-available
+      - ./docker/nginx/sites:/etc/nginx/sites-enabled
+      - ./docker/nginx/log:/var/log/nginx
+      - ./src:/var/www/html
+    working_dir: /var/www/html/car
+  phpfpm:
+    container_name: lemp-php
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    ports:
+      - 9000:9000
+    volumes:
+      - ./src:/var/www/html
+  # mysql:
+  #   container_name: lemp-mysql
+  #   image: mysql:5.7.22
+  #   volumes:
+  #     - ./docker/mysql/:/docker-entrypoint-initdb.d/
+  #     - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+  #     - ./tmp/docker/mysql/data:/var/lib/mysql
+  #   environment:
+  #     MYSQL_DATABASE: hotel
+  #     MYSQL_USER: pandog
+  #     MYSQL_PASSWORD: pandog
+  #     MYSQL_ROOT_PASSWORD: pandog
+  #   ports:
+  #     - 3906:3306
+  # phpmyadmin:
+  #   container_name: phpmyadmin
+  #   image: phpmyadmin/phpmyadmin
+  #   ports:
+  #     - 81:80
+  #   links:
+  #     - mysql
+  #   environment:
+  #     PMA_HOST: mysql
+  #     MYSQL_USERNAME: pandog
+  #     MYSQL_ROOT_PASSWORD: pandog
